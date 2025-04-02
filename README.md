@@ -1,4 +1,4 @@
-# 🚀 Microservices Architecture with Monitoring & Observability
+#  Microservices Architecture with Monitoring & Observability
 
 ## Overview
 This project is a microservices-based architecture featuring Flask services, PostgreSQL, Redis caching, monitoring with Prometheus/Grafana, and centralized logging with ELK.
