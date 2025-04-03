@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from config import SQLALCHEMY_DATABASE_URI
 from models import db, Product
 from routes import product_routes
+from utils import insert_default_data
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
@@ -13,6 +14,9 @@ db.init_app(app)
 # Ensure tables are created before handling requests
 with app.app_context():
     db.create_all()
+    insert_default_data(db) 
+    
+print("Database migration completed successfully!")
 
 # Register blueprints
 app.register_blueprint(product_routes)

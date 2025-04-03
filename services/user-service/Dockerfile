@@ -16,3 +16,4 @@ EXPOSE 5001
 
 # Run the app
 CMD ["python", "/app/src/app.py"]
+

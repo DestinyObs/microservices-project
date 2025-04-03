@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 EXPOSE 5002
 
 # Run the app
-CMD ["python", "/app/src/app.py"]
+CMD ["python", "python /app/src/migrate.py && python /app/src/app.py"]
