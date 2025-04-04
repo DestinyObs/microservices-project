@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 from models import db, User
+import redis
+import json
 
 user_routes = Blueprint("user_routes", __name__)
 
@@ -10,6 +12,9 @@ def get_users():
     return jsonify([user.to_dict() for user in users]), 200
 
 
+user_routes = Blueprint("user_routes", __name__)
+redis_client = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
+
 @user_routes.route("/users", methods=["POST"])
 def create_user():
     data = request.json
@@ -17,6 +22,9 @@ def create_user():
     
     db.session.add(new_user)
     db.session.commit()
+
+    # Invalidate cache
+    redis_client.delete("users")
 
     return jsonify(new_user.to_dict()), 201
 

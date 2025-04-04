@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 from models import db, Product
+import redis
+import json
 
 product_routes = Blueprint("product_routes", __name__)
 
@@ -7,6 +9,9 @@ product_routes = Blueprint("product_routes", __name__)
 def get_products():
     products = Product.query.all()
     return jsonify([product.to_dict() for product in products]), 200
+
+product_routes = Blueprint("product_routes", __name__)
+redis_client = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
 
 @product_routes.route("/products", methods=["POST"])
 def create_product():
@@ -21,12 +26,16 @@ def create_product():
     db.session.add(new_product)
     db.session.commit()
 
+     # Invalidate cache
+    redis_client.delete("products")
+
     return jsonify(new_product.to_dict()), 201
 
 @product_routes.route("/products/<int:product_id>", methods=["GET"])
 def get_product(product_id):
     product = Product.query.get_or_404(product_id)
     return jsonify(product.to_dict()), 200
+
 
 @product_routes.route("/products/<int:product_id>", methods=["PUT"])
 def update_product(product_id):
