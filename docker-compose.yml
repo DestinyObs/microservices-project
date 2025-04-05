@@ -1,4 +1,4 @@
-
+version: "3.8"
 
 services:
   user-service:
@@ -72,7 +72,7 @@ services:
       interval: 10s
       retries: 5
       timeout: 5s
-  
+
   redis:
     image: redis:latest
     container_name: redis_cache
@@ -105,6 +105,7 @@ services:
     container_name: prometheus
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml:ro
     ports:
       - "9090:9090"
     networks:
@@ -112,6 +113,7 @@ services:
     depends_on:
       - user-service
       - product-service
+
 
   grafana:
     image: grafana/grafana:latest
@@ -124,6 +126,49 @@ services:
       - app-network
     depends_on:
       - prometheus
+
+  # ──────────────────────────────────────
+  # Exporters
+  # ──────────────────────────────────────
+
+  user-db-exporter:
+    image: prometheuscommunity/postgres-exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://admin:admin@user-db:5432/userdb?sslmode=disable"
+    ports:
+      - "9187:9187"
+    networks:
+      - app-network
+    depends_on:
+      - user-db
+
+  product-db-exporter:
+    image: prometheuscommunity/postgres-exporter
+    environment:
+      DATA_SOURCE_NAME: "postgresql://admin:admin@product-db:5432/productdb?sslmode=disable"
+    ports:
+      - "9188:9187"
+    networks:
+      - app-network
+    depends_on:
+      - product-db
+
+  redis-exporter:
+    image: oliver006/redis_exporter
+    ports:
+      - "9121:9121"
+    networks:
+      - app-network
+    depends_on:
+      - redis
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node_exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - app-network
 
 volumes:
   user_pgdata:
