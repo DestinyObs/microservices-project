@@ -3,4 +3,5 @@ Flask-SQLAlchemy
 psycopg2-binary
 Flask-Migrate
 redis
+prometheus_client
 
