@@ -43,6 +43,7 @@ def before_request():
 # Register blueprints
 app.register_blueprint(product_routes)
 
+
 # Application routes
 @app.route("/")
 def home():

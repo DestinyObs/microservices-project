@@ -9,6 +9,7 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
 
+
     def __repr__(self):
         return f"<Product {self.name}>"
 
@@ -20,3 +21,4 @@ class Product(db.Model):
             "price": self.price,
             "stock": self.stock,
         }
+

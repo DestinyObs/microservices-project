@@ -13,6 +13,7 @@ def get_products():
 product_routes = Blueprint("product_routes", __name__)
 redis_client = redis.Redis(host='redis', port=6379, db=0, decode_responses=True)
 
+
 @product_routes.route("/products", methods=["POST"])
 def create_product():
     data = request.json

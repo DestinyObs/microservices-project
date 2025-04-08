@@ -17,6 +17,7 @@ def insert_default_data(db: SQLAlchemy):
             {"name": "Gaming Chair", "price": 350, "stock": 8},
         ]
 
+
         for product in sample_products:
             new_product = Product(
                 name=product["name"],
